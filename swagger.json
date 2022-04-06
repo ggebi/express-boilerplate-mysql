@@ -1,0 +1,1350 @@
+{
+  "openapi": "3.0.0",
+
+  "info": {
+    "title": "boilerplate sample API",
+    "description": "sample API.",
+    "termsOfService": "https://github.com/jhwmon/express-boilerplate-mysql",
+    "contact": {
+      "email": "jmonaco88@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+
+  "externalDocs": {
+    "description": "Find out more about this template",
+    "url": "https://github.com/jhwmon/express-boilerplate-mysql"
+  },
+
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1"
+    }
+  ],
+
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization routes"
+    },
+    {
+      "name": "AdPartner",
+      "description": "AdPartner routes"
+    }
+  ],
+
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "광고파트너 백오피스 로그인",
+        "operationId": "loginAdPartner",
+        "requestBody": {
+          "required": true,
+          "description": "AdPartner fields to login",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": ["userid", "password"],
+                "properties": {
+                  "userid": {
+                    "type": "string",
+                    "description": "광고파트너 아이디",
+                    "example": "jmonaco88@bbangyanetworks.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "광고파트너 패스워드",
+                    "example": "your-password ..."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 2000
+                    },
+                    "accessToken": {
+                      "type": "string",
+                      "example": "access token..."
+                    },
+                    "refreshToken": {
+                      "type": "string",
+                      "example": "refresh token..."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 4000
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "잘못 된 요청"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Incorrect email and password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 4010
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "인증 에러"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/auth/logout": {
+      "delete": {
+        "tags": ["Auth"],
+        "summary": "광고파트너 백오피스 로그아웃",
+        "operationId": "logoutUser",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "access token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "광고파트너 백오피스 회원가입",
+        "operationId": "signupAdPartner",
+        "requestBody": {
+          "required": true,
+          "description": "AdPartner fields to signup",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": ["userid", "password"],
+                "properties": {
+                  "userid": {
+                    "type": "string",
+                    "description": "광고파트너 아이디",
+                    "example": "jmonaco88@bbangyanetworks.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "광고파트너 패스워드",
+                    "example": "your-password ..."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 2000
+                    },
+                    "accessToken": {
+                      "type": "string",
+                      "example": "access token..."
+                    },
+                    "refreshToken": {
+                      "type": "string",
+                      "example": "refresh token..."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 4000
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "잘못 된 요청"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "광고파트너 토큰 재발급",
+        "operationId": "refreshUser",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "access token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "토큰 재발급 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 2000
+                    },
+                    "accessToken": {
+                      "type": "string",
+                      "example": "access token..."
+                    },
+                    "refreshToken": {
+                      "type": "string",
+                      "example": "refresh token..."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/check": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "광고파트너 토큰 유효성 체크",
+        "operationId": "checkToken",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "access token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer abcde..."
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "토큰 유효",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 2000
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "유효한 토큰"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "필수 값 부족",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 4000
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "토큰이 필요합니다."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 4010
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "인증 오류"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/adpartners": {
+      "get": {
+        "tags": ["AdPartner"],
+        "summary": "Retrieve all users",
+        "operationId": "findAdPartners",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "access token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "adpartners": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "no": {
+                                "type": "integer",
+                                "format": "int64"
+                              },
+                              "userid": {
+                                "type": "integer"
+                              },
+                              "nickname": {
+                                "type": "string"
+                              },
+                              "level": {
+                                "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "phone": {
+                                "type": "string"
+                              },
+                              "email": {
+                                "type": "string"
+                              },
+                              "reward": {
+                                "type": "number"
+                              },
+                              "bankName": {
+                                "type": "string"
+                              },
+                              "bankOwner": {
+                                "type": "string"
+                              },
+                              "bankAccount": {
+                                "type": "string"
+                              },
+                              "bankImageUrl": {
+                                "type": "string"
+                              },
+                              "createTime": {
+                                "type": "string"
+                              },
+                              "updateTime": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "example": [
+                            {
+                              "no": 100,
+                              "userid": "adpartner1",
+                              "nickname": "광고파트너 닉네임",
+                              "level": 1,
+                              "name": "파트너 실명",
+                              "phone": "010-1111-1111",
+                              "email": "partner1@gmail.com",
+                              "reward": 10.5,
+                              "createTime": "2021-10-26 12:00:00",
+                              "updateTime": "2021-10-26 13:00:01"
+                            },
+                            {
+                              "no": 101,
+                              "userid": "adpartner2",
+                              "nickname": "광고파트너 닉네임2",
+                              "level": 1,
+                              "name": "파트너 실명",
+                              "phone": "010-1111-2222",
+                              "email": "partner1@gmail.com",
+                              "reward": 10.5,
+                              "createTime": "2021-10-26 12:00:00",
+                              "updateTime": "2021-10-26 13:00:01"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing credentials",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid token, please log in or sign up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 2000
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "인증 에러"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/adpartners/{id}": {
+      "get": {
+        "tags": ["AdPartner"],
+        "summary": "Retrieve user by id",
+        "operationId": "findUserById",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "access token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 2000
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "adpartner": {
+                          "type": "object",
+                          "properties": {
+                            "no": {
+                              "type": "integer",
+                              "example": 100
+                            },
+                            "userid": {
+                              "type": "string",
+                              "example": "jmonaco88@bbangyanetworks.com"
+                            },
+                            "nickname": {
+                              "type": "string",
+                              "example": "빵야빵야"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "본명"
+                            },
+                            "level": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "phone": {
+                              "type": "string",
+                              "example": "01011112222"
+                            },
+                            "email": {
+                              "type": "string",
+                              "example": "jmonaco88@bbangyanetworks.com"
+                            },
+                            "reward": {
+                              "type": "number",
+                              "example": "10.5"
+                            },
+                            "bankName": {
+                              "type": "string",
+                              "example": "기업은행"
+                            },
+                            "bankOwner": {
+                              "type": "string",
+                              "example": "통장 소유명"
+                            },
+                            "bankAccount": {
+                              "type": "string",
+                              "example": "1111-111-2222"
+                            },
+                            "bankImageUrl": {
+                              "type": "string",
+                              "example": "http://image1.jpg"
+                            },
+                            "createTime": {
+                              "type": "string",
+                              "example": "2021-10-22 12:00:00"
+                            },
+                            "updateTime": {
+                              "type": "string",
+                              "example": "2021-10-22 13:01:02"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing credentials",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid token, please log in or sign up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 4010
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "인증 오류"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        },
+                        "trace": {
+                          "type": "object",
+                          "properties": {
+                            "statusCode": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      },
+      "patch": {
+        "tags": ["AdPartner"],
+        "summary": "Update User By Id",
+        "operationId": "updateUserById",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "access token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "User fields to update",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nickname": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "reward": {
+                    "type": "number"
+                  },
+                  "bankName": {
+                    "type": "string"
+                  },
+                  "bankOwner": {
+                    "type": "string"
+                  },
+                  "bankAccount": {
+                    "type": "string"
+                  },
+                  "bankImageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "deleteBankImage": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 2000
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "수정 성공"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "adpartner": {
+                          "type": "object",
+                          "properties": {
+                            "no": {
+                              "type": "integer",
+                              "example": 100
+                            },
+                            "userid": {
+                              "type": "string",
+                              "example": "jmonaco88@bbangyanetworks.com"
+                            },
+                            "nickname": {
+                              "type": "string",
+                              "example": "빵야빵야"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "본명"
+                            },
+                            "level": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "phone": {
+                              "type": "string",
+                              "example": "01011112222"
+                            },
+                            "email": {
+                              "type": "string",
+                              "example": "jmonaco88@bbangyanetworks.com"
+                            },
+                            "reward": {
+                              "type": "number",
+                              "example": "10.5"
+                            },
+                            "bankName": {
+                              "type": "string",
+                              "example": "기업은행"
+                            },
+                            "bankOwner": {
+                              "type": "string",
+                              "example": "통장 소유명"
+                            },
+                            "bankAccount": {
+                              "type": "string",
+                              "example": "1111-111-2222"
+                            },
+                            "bankImageUrl": {
+                              "type": "string",
+                              "example": "http://image1.jpg"
+                            },
+                            "createTime": {
+                              "type": "string",
+                              "example": "2021-10-22 12:00:00"
+                            },
+                            "updateTime": {
+                              "type": "string",
+                              "example": "2021-10-22 13:01:02"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing credentials",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid token, please log in or sign up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        },
+                        "trace": {
+                          "type": "object",
+                          "properties": {
+                            "statusCode": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      },
+      "delete": {
+        "tags": ["AdPartner"],
+        "summary": "Delete User By Id",
+        "operationId": "deleteUserById",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "access token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing credentials",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid token, please log in or sign up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        },
+                        "trace": {
+                          "type": "object",
+                          "properties": {
+                            "statusCode": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/adpartners/{id}/password": {
+      "patch": {
+        "tags": ["AdPartner"],
+        "summary": "Update Password User By Id",
+        "operationId": "updateUserPasswordById",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "access token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "User password field to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  },
+                  "newPassword": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 2000
+                    },
+                    "msg": {
+                      "type": "string",
+                      "example": "광고파트너 패스워드 업데이트 성공"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token, please log in or sign up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "number",
+                          "example": 4010
+                        },
+                        "msg": {
+                          "type": "string",
+                          "example": "인증 에러"
+                        },
+                        "trace": {
+                          "type": "object",
+                          "properties": {
+                            "statusCode": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      },
+      "delete": {
+        "tags": ["AdPartner"],
+        "summary": "Delete User By Id",
+        "operationId": "deleteUserById",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "access token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing credentials",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid token, please log in or sign up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        },
+                        "trace": {
+                          "type": "object",
+                          "properties": {
+                            "statusCode": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {}
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/adpartners/me": {
+      "get": {
+        "tags": ["AdPartner"],
+        "summary": "Retrieve me",
+        "operationId": "findUserByMe",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "access token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 2000
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "adpartner": {
+                          "type": "object",
+                          "properties": {
+                            "no": {
+                              "type": "integer",
+                              "example": 100
+                            },
+                            "userid": {
+                              "type": "string",
+                              "example": "jmonaco88@bbangyanetworks.com"
+                            },
+                            "nickname": {
+                              "type": "string",
+                              "example": "빵야빵야"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "본명"
+                            },
+                            "level": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "phone": {
+                              "type": "string",
+                              "example": "01011112222"
+                            },
+                            "email": {
+                              "type": "string",
+                              "example": "jmonaco88@bbangyanetworks.com"
+                            },
+                            "reward": {
+                              "type": "number",
+                              "example": "10.5"
+                            },
+                            "bankName": {
+                              "type": "string",
+                              "example": "기업은행"
+                            },
+                            "bankOwner": {
+                              "type": "string",
+                              "example": "통장 소유명"
+                            },
+                            "bankAccount": {
+                              "type": "string",
+                              "example": "1111-111-2222"
+                            },
+                            "bankImageUrl": {
+                              "type": "string",
+                              "example": "http://image1.jpg"
+                            },
+                            "createTime": {
+                              "type": "string",
+                              "example": "2021-10-22 12:00:00"
+                            },
+                            "updateTime": {
+                              "type": "string",
+                              "example": "2021-10-22 13:01:02"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing credentials",
+            "content": {}
+          },
+          "401": {
+            "description": "Invalid token, please log in or sign up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        },
+                        "trace": {
+                          "type": "object",
+                          "properties": {
+                            "statusCode": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "required": ["userid", "pwd"],
+        "properties": {
+          "no": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userid": {
+            "type": "integer"
+          }
+        },
+        "xml": {
+          "name": "User"
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

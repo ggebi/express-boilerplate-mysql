@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  boilerplate-mysql:
+    image: mysql:5.7
+    restart: always
+    container_name: boilerplate-mysql
+    environment: # -e 옵션
+      - MYSQL_DATABASE=testdb
+      - MYSQL_ROOT_PASSWORD=boilerplate10041004! # MYSQL 패스워드 설정 옵션
+      - TZ=Asia/Seoul
+    ports:
+      - '3306:3306' # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)  <- 컨테이너 내부는 무조건 3306
+
+    command: # 명령어 실행
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql2 # -v 옵션 (다렉토리 마운트 설정)
+
+volumes:
+  mysql-data:

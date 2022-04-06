@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  boidlerplate-redis:
+    image: redis
+    restart: always
+    container_name: boidlerplate-redis
+    ports:
+      - '6379:6379'
