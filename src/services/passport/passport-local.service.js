@@ -1,10 +1,7 @@
+import validator from 'validator';
 import passport from 'passport';
 import { Strategy } from 'passport-local';
-import validator from 'validator';
-import debug from 'debug';
 import db from '../../models';
-
-const DEBUG = debug('dev');
 
 const authFields = {
   usernameField: 'userid',
@@ -17,7 +14,7 @@ passport.use(
   'login',
   new Strategy(authFields, async (req, userid, password, cb) => {
     try {
-      const user = await db.AdPartner.findOne({
+      const user = await db.User.findOne({
         where: {
           userid,
         },
@@ -31,7 +28,7 @@ passport.use(
         });
       }
 
-      const checkPassword = await db.AdPartner.comparePassword(
+      const checkPassword = await db.User.comparePassword(
         password,
         user.password,
       );
@@ -41,7 +38,6 @@ passport.use(
       }
       return cb(null, user, { message: 'Logged In Successfully' });
     } catch (err) {
-      DEBUG(err);
       return cb(null, false, {
         code: 4000,
         statusCode: 400,
@@ -55,7 +51,7 @@ passport.use(
   'signup',
   new Strategy(authFields, async (req, userid, password, cb) => {
     try {
-      const checkUserid = await db.AdPartner.checkUserid(userid);
+      const checkUserid = await db.User.checkUserid(userid);
       if (checkUserid) {
         return cb(null, false, {
           statusCode: 409,
@@ -84,14 +80,13 @@ passport.use(
         });
       }
 
-      const newUser = await db.AdPartner.create({
+      const newUser = await db.User.create({
         userid,
         password,
       });
 
       return cb(null, newUser);
     } catch (err) {
-      DEBUG(err);
       return cb(null, false, { statusCode: 400, message: err.message });
     }
   }),

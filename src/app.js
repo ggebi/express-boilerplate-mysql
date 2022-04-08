@@ -7,26 +7,33 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import passport from 'passport';
 import xss from 'xss-clean';
+
+/**
+ * Custom error handling
+ */
 import errorHandler from './middlewares/errorHandler.middleware';
-import db from './models';
-import v1Routes from './routes/v1/index.route';
 import { NotFoundError } from './helpers/errors.helper';
+
+// Import database configuration
+// import db from './models';
+
+/**
+ * Routes import
+ * @type {Router | {readonly default?: Router}}
+ */
+import v1Routes from './routes/v1/index.route';
 
 /**
  * Global env variables definition
  */
 if (process.env.NODE_ENV === 'development') {
   dotenv.config();
-} else {
-  const datadogConfig = JSON.parse(process.env.DATADOG_CONFIG);
-  process.env.DD_API_KEY = datadogConfig.apikey;
-  process.env.DD_APP_KEY = datadogConfig.appkey;
 }
 
 /**
- * Sequelize - DB sync
+ * DB & Redis
  */
-db.sequelize.sync();
+// db.sequelize.sync();
 
 /**
  * Define Express
@@ -34,14 +41,10 @@ db.sequelize.sync();
  */
 const app = express();
 
-/**
- * 프로시 환경일 경우 설정
- */
 app.set('trust proxy', true);
 
 /**
- * access log 포맷 정의
- * AWS healthcheck 예외
+ * Middleware definition
  */
 app.use(
   morgan(
@@ -105,21 +108,21 @@ app.use(
 );
 
 /**
- * Initialize Passport and pass the session to session storage of express
- */
-app.use(passport.initialize());
-
-/**
- * AWS ALB healthcheck DF
+ * ALB healthcheck
  */
 app.get('/healthcheck', function (req, res) {
   return res.status(200).send('ok');
 });
 
 /**
+ * Initialize Passport and pass the session to session storage of express
+ */
+app.use(passport.initialize());
+
+/**
  * Routes definitions
  */
-app.use('/api/v1/', v1Routes);
+app.use('/admin/v1/', v1Routes);
 
 /**
  * This helper function is useful if we use express as a pure API endpoint

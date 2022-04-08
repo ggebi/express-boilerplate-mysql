@@ -28,8 +28,8 @@
       "description": "Authorization routes"
     },
     {
-      "name": "AdPartner",
-      "description": "AdPartner routes"
+      "name": "User",
+      "description": "User routes"
     }
   ],
 
@@ -38,10 +38,10 @@
       "post": {
         "tags": ["Auth"],
         "summary": "광고파트너 백오피스 로그인",
-        "operationId": "loginAdPartner",
+        "operationId": "loginUser",
         "requestBody": {
           "required": true,
-          "description": "AdPartner fields to login",
+          "description": "User fields to login",
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
@@ -51,7 +51,7 @@
                   "userid": {
                     "type": "string",
                     "description": "광고파트너 아이디",
-                    "example": "jmonaco88@bbangyanetworks.com"
+                    "example": "jmonaco88@gmail.com"
                   },
                   "password": {
                     "type": "string",
@@ -99,7 +99,7 @@
                       "type": "number",
                       "example": 4000
                     },
-                    "msg": {
+                    "message": {
                       "type": "string",
                       "example": "잘못 된 요청"
                     }
@@ -119,7 +119,7 @@
                       "type": "number",
                       "example": 4010
                     },
-                    "msg": {
+                    "message": {
                       "type": "string",
                       "example": "인증 에러"
                     }
@@ -159,7 +159,7 @@
                     "code": {
                       "type": "string"
                     },
-                    "msg": {
+                    "message": {
                       "type": "string"
                     }
                   }
@@ -175,10 +175,10 @@
       "post": {
         "tags": ["Auth"],
         "summary": "광고파트너 백오피스 회원가입",
-        "operationId": "signupAdPartner",
+        "operationId": "signupUser",
         "requestBody": {
           "required": true,
-          "description": "AdPartner fields to signup",
+          "description": "User fields to signup",
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
@@ -188,7 +188,7 @@
                   "userid": {
                     "type": "string",
                     "description": "광고파트너 아이디",
-                    "example": "jmonaco88@bbangyanetworks.com"
+                    "example": "jmonaco88@gmail.com"
                   },
                   "password": {
                     "type": "string",
@@ -236,7 +236,7 @@
                       "type": "number",
                       "example": 4000
                     },
-                    "msg": {
+                    "message": {
                       "type": "string",
                       "example": "잘못 된 요청"
                     }
@@ -322,7 +322,7 @@
                       "type": "number",
                       "example": 2000
                     },
-                    "msg": {
+                    "message": {
                       "type": "string",
                       "example": "유효한 토큰"
                     }
@@ -342,7 +342,7 @@
                       "type": "number",
                       "example": 4000
                     },
-                    "msg": {
+                    "message": {
                       "type": "string",
                       "example": "토큰이 필요합니다."
                     }
@@ -362,7 +362,7 @@
                       "type": "number",
                       "example": 4010
                     },
-                    "msg": {
+                    "message": {
                       "type": "string",
                       "example": "인증 오류"
                     }
@@ -374,11 +374,11 @@
         }
       }
     },
-    "/adpartners": {
+    "/users": {
       "get": {
-        "tags": ["AdPartner"],
+        "tags": ["Users"],
         "summary": "Retrieve all users",
-        "operationId": "findAdPartners",
+        "operationId": "findUsers",
         "parameters": [
           {
             "name": "Authorization",
@@ -407,22 +407,16 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "adpartners": {
+                        "users": {
                           "type": "array",
                           "items": {
                             "type": "object",
                             "properties": {
-                              "no": {
+                              "id": {
                                 "type": "integer",
                                 "format": "int64"
                               },
                               "userid": {
-                                "type": "integer"
-                              },
-                              "nickname": {
-                                "type": "string"
-                              },
-                              "level": {
                                 "type": "integer"
                               },
                               "name": {
@@ -432,21 +426,6 @@
                                 "type": "string"
                               },
                               "email": {
-                                "type": "string"
-                              },
-                              "reward": {
-                                "type": "number"
-                              },
-                              "bankName": {
-                                "type": "string"
-                              },
-                              "bankOwner": {
-                                "type": "string"
-                              },
-                              "bankAccount": {
-                                "type": "string"
-                              },
-                              "bankImageUrl": {
                                 "type": "string"
                               },
                               "createTime": {
@@ -459,26 +438,20 @@
                           },
                           "example": [
                             {
-                              "no": 100,
-                              "userid": "adpartner1",
-                              "nickname": "광고파트너 닉네임",
-                              "level": 1,
-                              "name": "파트너 실명",
+                              "id": 100,
+                              "userid": "user1",
+                              "name": "name1",
                               "phone": "010-1111-1111",
-                              "email": "partner1@gmail.com",
-                              "reward": 10.5,
+                              "email": "user1@gmail.com",
                               "createTime": "2021-10-26 12:00:00",
                               "updateTime": "2021-10-26 13:00:01"
                             },
                             {
-                              "no": 101,
-                              "userid": "adpartner2",
-                              "nickname": "광고파트너 닉네임2",
-                              "level": 1,
-                              "name": "파트너 실명",
+                              "id": 101,
+                              "userid": "user2",
+                              "name": "name2",
                               "phone": "010-1111-2222",
-                              "email": "partner1@gmail.com",
-                              "reward": 10.5,
+                              "email": "user2@gmail.com",
                               "createTime": "2021-10-26 12:00:00",
                               "updateTime": "2021-10-26 13:00:01"
                             }
@@ -502,11 +475,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "code": {
-                      "type": "number",
-                      "example": 2000
-                    },
-                    "msg": {
+                    "message": {
                       "type": "string",
                       "example": "인증 에러"
                     }
@@ -524,9 +493,9 @@
         "x-codegen-request-body-name": "body"
       }
     },
-    "/adpartners/{id}": {
+    "/users/{id}": {
       "get": {
-        "tags": ["AdPartner"],
+        "tags": ["Users"],
         "summary": "Retrieve user by id",
         "operationId": "findUserById",
         "parameters": [
@@ -564,28 +533,20 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "adpartner": {
+                        "user": {
                           "type": "object",
                           "properties": {
-                            "no": {
+                            "id": {
                               "type": "integer",
                               "example": 100
                             },
                             "userid": {
                               "type": "string",
-                              "example": "jmonaco88@bbangyanetworks.com"
-                            },
-                            "nickname": {
-                              "type": "string",
-                              "example": "빵야빵야"
+                              "example": "jmonaco88@gmail.com"
                             },
                             "name": {
                               "type": "string",
                               "example": "본명"
-                            },
-                            "level": {
-                              "type": "integer",
-                              "example": 1
                             },
                             "phone": {
                               "type": "string",
@@ -593,27 +554,7 @@
                             },
                             "email": {
                               "type": "string",
-                              "example": "jmonaco88@bbangyanetworks.com"
-                            },
-                            "reward": {
-                              "type": "number",
-                              "example": "10.5"
-                            },
-                            "bankName": {
-                              "type": "string",
-                              "example": "기업은행"
-                            },
-                            "bankOwner": {
-                              "type": "string",
-                              "example": "통장 소유명"
-                            },
-                            "bankAccount": {
-                              "type": "string",
-                              "example": "1111-111-2222"
-                            },
-                            "bankImageUrl": {
-                              "type": "string",
-                              "example": "http://image1.jpg"
+                              "example": "jmonaco88@gmail.com"
                             },
                             "createTime": {
                               "type": "string",
@@ -643,11 +584,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "code": {
-                      "type": "number",
-                      "example": 4010
-                    },
-                    "msg": {
+                    "message": {
                       "type": "string",
                       "example": "인증 오류"
                     },
@@ -681,7 +618,7 @@
         "x-codegen-request-body-name": "body"
       },
       "patch": {
-        "tags": ["AdPartner"],
+        "tags": ["Users"],
         "summary": "Update User By Id",
         "operationId": "updateUserById",
         "parameters": [
@@ -708,13 +645,10 @@
           "required": true,
           "description": "User fields to update",
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "nickname": {
-                    "type": "string"
-                  },
                   "name": {
                     "type": "string"
                   },
@@ -723,25 +657,6 @@
                   },
                   "email": {
                     "type": "string"
-                  },
-                  "reward": {
-                    "type": "number"
-                  },
-                  "bankName": {
-                    "type": "string"
-                  },
-                  "bankOwner": {
-                    "type": "string"
-                  },
-                  "bankAccount": {
-                    "type": "string"
-                  },
-                  "bankImageFile": {
-                    "type": "string",
-                    "format": "binary"
-                  },
-                  "deleteBankImage": {
-                    "type": "boolean"
                   }
                 }
               }
@@ -756,39 +671,27 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "code": {
-                      "type": "number",
-                      "example": 2000
-                    },
-                    "msg": {
+                    "message": {
                       "type": "string",
                       "example": "수정 성공"
                     },
                     "data": {
                       "type": "object",
                       "properties": {
-                        "adpartner": {
+                        "user": {
                           "type": "object",
                           "properties": {
-                            "no": {
+                            "id": {
                               "type": "integer",
                               "example": 100
                             },
                             "userid": {
                               "type": "string",
-                              "example": "jmonaco88@bbangyanetworks.com"
-                            },
-                            "nickname": {
-                              "type": "string",
-                              "example": "빵야빵야"
+                              "example": "jmonaco88@google.com"
                             },
                             "name": {
                               "type": "string",
                               "example": "본명"
-                            },
-                            "level": {
-                              "type": "integer",
-                              "example": 1
                             },
                             "phone": {
                               "type": "string",
@@ -796,27 +699,7 @@
                             },
                             "email": {
                               "type": "string",
-                              "example": "jmonaco88@bbangyanetworks.com"
-                            },
-                            "reward": {
-                              "type": "number",
-                              "example": "10.5"
-                            },
-                            "bankName": {
-                              "type": "string",
-                              "example": "기업은행"
-                            },
-                            "bankOwner": {
-                              "type": "string",
-                              "example": "통장 소유명"
-                            },
-                            "bankAccount": {
-                              "type": "string",
-                              "example": "1111-111-2222"
-                            },
-                            "bankImageUrl": {
-                              "type": "string",
-                              "example": "http://image1.jpg"
+                              "example": "jmonaco88@gmail.com"
                             },
                             "createTime": {
                               "type": "string",
@@ -883,7 +766,7 @@
         "x-codegen-request-body-name": "body"
       },
       "delete": {
-        "tags": ["AdPartner"],
+        "tags": ["Users"],
         "summary": "Delete User By Id",
         "operationId": "deleteUserById",
         "parameters": [
@@ -973,9 +856,9 @@
         "x-codegen-request-body-name": "body"
       }
     },
-    "/adpartners/{id}/password": {
+    "/users/{id}/password": {
       "patch": {
-        "tags": ["AdPartner"],
+        "tags": ["Users"],
         "summary": "Update Password User By Id",
         "operationId": "updateUserPasswordById",
         "parameters": [
@@ -1025,11 +908,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "code": {
-                      "type": "number",
-                      "example": 2000
-                    },
-                    "msg": {
+                    "message": {
                       "type": "string",
                       "example": "광고파트너 패스워드 업데이트 성공"
                     }
@@ -1051,11 +930,7 @@
                     "error": {
                       "type": "object",
                       "properties": {
-                        "code": {
-                          "type": "number",
-                          "example": 4010
-                        },
-                        "msg": {
+                        "message": {
                           "type": "string",
                           "example": "인증 에러"
                         },
@@ -1083,7 +958,7 @@
         "x-codegen-request-body-name": "body"
       },
       "delete": {
-        "tags": ["AdPartner"],
+        "tags": ["Users"],
         "summary": "Delete User By Id",
         "operationId": "deleteUserById",
         "parameters": [
@@ -1173,9 +1048,9 @@
         "x-codegen-request-body-name": "body"
       }
     },
-    "/adpartners/me": {
+    "/users/me": {
       "get": {
-        "tags": ["AdPartner"],
+        "tags": ["Users"],
         "summary": "Retrieve me",
         "operationId": "findUserByMe",
         "parameters": [
@@ -1197,17 +1072,13 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "code": {
-                      "type": "number",
-                      "example": 2000
-                    },
-                    "msg": {
+                    "message": {
                       "type": "string"
                     },
                     "data": {
                       "type": "object",
                       "properties": {
-                        "adpartner": {
+                        "user": {
                           "type": "object",
                           "properties": {
                             "no": {
@@ -1216,19 +1087,11 @@
                             },
                             "userid": {
                               "type": "string",
-                              "example": "jmonaco88@bbangyanetworks.com"
-                            },
-                            "nickname": {
-                              "type": "string",
-                              "example": "빵야빵야"
+                              "example": "jmonaco88@gmail.com"
                             },
                             "name": {
                               "type": "string",
                               "example": "본명"
-                            },
-                            "level": {
-                              "type": "integer",
-                              "example": 1
                             },
                             "phone": {
                               "type": "string",
@@ -1236,27 +1099,7 @@
                             },
                             "email": {
                               "type": "string",
-                              "example": "jmonaco88@bbangyanetworks.com"
-                            },
-                            "reward": {
-                              "type": "number",
-                              "example": "10.5"
-                            },
-                            "bankName": {
-                              "type": "string",
-                              "example": "기업은행"
-                            },
-                            "bankOwner": {
-                              "type": "string",
-                              "example": "통장 소유명"
-                            },
-                            "bankAccount": {
-                              "type": "string",
-                              "example": "1111-111-2222"
-                            },
-                            "bankImageUrl": {
-                              "type": "string",
-                              "example": "http://image1.jpg"
+                              "example": "jmonaco88@gmail.com"
                             },
                             "createTime": {
                               "type": "string",

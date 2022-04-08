@@ -47,7 +47,7 @@ options.jwtFromRequest = ExtractJwt.fromExtractors([
 passport.use(
   new Strategy(options, (req, jwtPayload, done) => {
     try {
-      db.AdPartner.findOne({ where: { no: jwtPayload.userNo } })
+      db.User.findOne({ where: { id: jwtPayload.userId } })
         .then((user) => {
           if (!user) {
             return done(null, false);

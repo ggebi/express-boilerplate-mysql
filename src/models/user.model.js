@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
   const User = sequelize.define(
     'User',
     {
-      no: {
+      id: {
         type: DataTypes.INTEGER(11),
         primaryKey: true,
         autoIncrement: true,
@@ -22,15 +22,6 @@ module.exports = (sequelize) => {
           this.setDataValue('password', hash);
         },
       },
-      level: {
-        type: DataTypes.STRING(10),
-        allowNull: false,
-        defaultValue: 'user',
-      },
-      nickname: {
-        type: DataTypes.STRING(20),
-        allowNull: true,
-      },
       name: {
         type: DataTypes.STRING(20),
         allowNull: true,
@@ -43,39 +34,28 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING(250),
         allowNull: true,
       },
-      reward: {
-        type: DataTypes.DOUBLE(),
-        allowNull: true,
-      },
-      bankName: {
-        type: DataTypes.STRING(20),
-        allowNull: true,
-      },
-      bankOwner: {
-        type: DataTypes.STRING(20),
-        allowNull: true,
-      },
-      bankAccount: {
-        type: DataTypes.STRING(100),
-        allowNull: true,
-      },
-      bankImageUrl: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
-      },
       createTime: {
-        type: 'TIMESTAMP',
+        type: DataTypes.DATE,
         defaultValue: literal('CURRENT_TIMESTAMP'),
         allowNull: false,
       },
       updateTime: {
-        type: 'TIMESTAMP',
-        allowNull: false,
+        type: DataTypes.DATE,
+        allowNull: true,
       },
     },
     {
+      tableName: 'User',
       freezeTableName: true,
       timestamps: false,
+      indexes: [
+        {
+          name: 'PRIMARY',
+          unique: true,
+          using: 'BTREE',
+          fields: [{ name: 'id' }],
+        },
+      ],
     },
   );
 
@@ -90,7 +70,7 @@ module.exports = (sequelize) => {
   };
 
   /**
-   * 유저아이디 존재여부 체크
+   * 유저아이디 중복 체크
    * @param {string} userid
    * @returns
    */

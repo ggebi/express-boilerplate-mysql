@@ -1,14 +1,12 @@
 import db from '../models/index';
-import { AuthenticationError } from '../helpers/errors.helper';
+import { AuthenticationError, NotFoundError } from '../helpers/errors.helper';
 
 export default {
   find: async (limit = 20, offset = 0) => {
-    const adpartners = await db.AdPartner.findAll({
+    const users = await db.User.findAll({
       attributes: [
-        'no',
+        'id',
         'userid',
-        'level',
-        'nickname',
         'name',
         'phone',
         'email',
@@ -17,63 +15,56 @@ export default {
       ],
       offset: parseInt(offset, 10),
       limit: parseInt(limit, 10),
-      order: [['no', 'DESC']],
+      order: [['id', 'DESC']],
     });
 
-    return adpartners;
+    return users;
   },
   findById: async (id) => {
-    const adpartner = await db.AdPartner.findOne({
+    const user = await db.User.findOne({
       attributes: [
-        'no',
+        'id',
         'userid',
-        'level',
-        'nickname',
         'name',
         'phone',
         'email',
-        'reward',
-        'bankName',
-        'bankOwner',
-        'bankAccount',
-        'bankImageUrl',
         'createTime',
         'updateTime',
       ],
-      where: [{ no: id }],
+      where: [{ id }],
+      limit: 1,
     });
 
-    if (adpartner !== null) {
-      return adpartner;
+    if (user !== null) {
+      return user;
     } else {
-      throw new Error('Adpartner not found');
+      throw new NotFoundError('User not found');
     }
   },
   update: async (id, data) => {
-    const updatedAdpartner = await db.AdPartner.update(data, {
-      where: [{ no: id }],
+    const updatedUser = await db.User.update(data, {
+      where: [{ id }],
+      limit: 1,
     });
 
-    if (updatedAdpartner !== null) {
-      return updatedAdpartner;
+    if (updatedUser !== null) {
+      return updatedUser;
     } else {
-      throw new Error('Adpartner not found');
+      throw new NotFoundError('User not found');
     }
   },
   delete: async (id) => {
-    const deletedAdpartner = await db.AdPartner.findByIdAndDelete(id);
+    const deletedUser = await db.User.findByIdAndDelete(id);
 
-    if (deletedAdpartner !== null) {
-      return deletedAdpartner;
+    if (deletedUser !== null) {
+      return deletedUser;
     } else {
-      throw new Error('Adpartner not found');
+      throw new NotFoundError('User not found');
     }
   },
   comparePassword: async (password, userPassword) => {
-    const checkPassword = await db.AdPartner.comparePassword(
-      password,
-      userPassword,
-    );
+    const checkPassword = await db.User.comparePassword(password, userPassword);
+
     if (!checkPassword) {
       throw new AuthenticationError('인증 에러');
     }

@@ -8,7 +8,7 @@ import {
 
 export default {
   /**
-   * Find all user accounts
+   * 유저 리스트 조회
    * @param req
    * @param res
    * @return {Promise<void>}
@@ -16,75 +16,51 @@ export default {
   findAllUsers: async (req, res) => {
     try {
       const { limit, offset } = req.query;
-      const adpartners = await UserService.find(limit, offset);
+      const users = await UserService.find(limit, offset);
       res.status(200).json({
-        code: 2000,
-        msg: '광고파트너 리스트 조회 성공',
-        data: { adpartners },
+        message: '유저 리스트 조회 성공',
+        data: { users },
       });
     } catch (error) {
       throw new ApplicationError(500, error);
     }
   },
   /**
-   * Find User by id
+   * 유저 상세 조회
    * @param req
    * @param res
    * @return {Promise<void>}
    */
   findUserById: async (req, res) => {
     try {
-      if (
-        req.user.level === 'user' &&
-        req.user.no !== parseInt(req.params.adptnId, 10)
-      ) {
-        return res.status(403).json({
-          code: 4030,
-          msg: '권한 없음',
-        });
-      }
-
-      const adpartner = await UserService.findById(req.params.adptnId);
+      const user = await UserService.findById(req.params.userId);
       res.status(200).json({
-        code: 2000,
-        msg: '광고파트너 상세 조회 성공',
-        data: { adpartner },
+        message: '유저 상세 조회 성공',
+        data: { user },
       });
     } catch (error) {
       throw new NotFoundError(error.message);
     }
   },
   /**
-   * Update user by id
+   * 유저 수정
    * @param req
    * @param res
+   * @param next
    * @return {Promise<void>}
    */
   updateUser: async (req, res) => {
     try {
-      if (
-        req.user.level === 'user' &&
-        req.user.no !== parseInt(req.params.adptnId, 10)
-      ) {
-        return res.status(403).json({
-          code: 4030,
-          msg: '권한 없음',
-        });
-      }
-
-      // validation
       const validatedData = await validateSchema.validateAsync(req.body);
 
-      await UserService.update(req.params.adptnId, validatedData);
+      const user = await UserService.update(req.params.userId, validatedData);
+      delete user.password;
 
-      const adpartner = await UserService.findById(req.params.adptnId);
       res.status(200).json({
-        code: 2000,
-        msg: '광고파트너 정보 업데이트 성공',
-        data: { adpartner },
+        message: '유저 정보 업데이트 성공',
+        data: { user },
       });
     } catch (error) {
-      console.log(error);
       throw new NotFoundError(error.message);
     }
   },
@@ -96,22 +72,20 @@ export default {
    */
   deleteUser: async (req, res) => {
     try {
-      await UserService.delete(req.params.adptnId);
+      await UserService.delete(req.params.userId);
       res.status(200).json({
-        status: 'success',
-        message: 'User deleted successfully',
+        message: '유저 삭제 성공',
       });
     } catch (error) {
-      throw new NotFoundError(error.message);
+      throw new ApplicationError(500, error);
     }
   },
   findMe: async (req, res) => {
     try {
-      const adpartner = await UserService.findById(req.currentUser.userNo);
+      const me = await UserService.findById(req.currentUser.userNo);
       res.status(200).json({
-        code: 2000,
-        msg: '광고파트너 내정보 조회 성공',
-        data: { adpartner },
+        message: '유저 내정보 조회 성공',
+        data: { me },
       });
     } catch (error) {
       throw new NotFoundError(error.message);
@@ -121,27 +95,24 @@ export default {
     try {
       const { password, newPassword } = req.body;
 
-      if (
-        req.user.level === 'user' &&
-        req.user.no !== parseInt(req.params.adptnId, 10)
-      ) {
-        return res.status(403).json({
-          code: 4030,
-          msg: '권한 없음',
-        });
-      }
+      // if (
+      //   req.user.level === 'user' &&
+      //   req.user.no !== parseInt(req.params.userId, 10)
+      // ) {
+      //   return res.status(403).json({
+      //     message: '권한 없음',
+      //   });
+      // }
 
-      // TODO: body param validate
+      // 유효한 패스워드인지 체크
       await UserService.comparePassword(password, req.user.password);
-
-      await UserService.update(req.params.adptnId, {
+      // 새로운 패스워드 반영
+      await UserService.update(req.params.userId, {
         password: newPassword,
       });
 
       res.status(200).json({
-        code: 2000,
-        msg: '광고파트너 패스워드 업데이트 성공',
-        // data: { adpartner },
+        message: '유저 패스워드 업데이트 성공',
       });
     } catch (error) {
       if (error instanceof NotFoundError)
