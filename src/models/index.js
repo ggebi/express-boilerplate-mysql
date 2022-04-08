@@ -16,7 +16,7 @@ if (env === 'staging' || env === 'production') {
   }
   config.username = auth.username;
   config.password = auth.password;
-  config.database = process.env.DB_PREFIX;
+  config.database = process.env.DB_NAME;
   config.host = process.env.DB_HOST;
 }
 

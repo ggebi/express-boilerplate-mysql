@@ -1,14 +1,10 @@
-import debug from 'debug';
 import UserService from '../services/user.service';
-import { deleteBankAccountImage } from '../services/aws/aws.service';
 import { validateSchema } from '../services/joi/joi.service';
 import {
   ApplicationError,
   NotFoundError,
   AuthenticationError,
 } from '../helpers/errors.helper';
-
-const DEBUG = debug('dev');
 
 export default {
   /**
@@ -27,7 +23,6 @@ export default {
         data: { adpartners },
       });
     } catch (error) {
-      DEBUG(error);
       throw new ApplicationError(500, error);
     }
   },
@@ -56,7 +51,6 @@ export default {
         data: { adpartner },
       });
     } catch (error) {
-      DEBUG(error);
       throw new NotFoundError(error.message);
     }
   },
@@ -68,7 +62,6 @@ export default {
    */
   updateUser: async (req, res) => {
     try {
-      // 롤 체크
       if (
         req.user.level === 'user' &&
         req.user.no !== parseInt(req.params.adptnId, 10)
@@ -82,20 +75,8 @@ export default {
       // validation
       const validatedData = await validateSchema.validateAsync(req.body);
 
-      // 통장사본 이미지 삭제를 하나의 API로 처리하기 위해서 추가한 기능
-      if (req.body.deleteBankImage === 'true') {
-        if (req.user.bankImageUrl) {
-          await deleteBankAccountImage(req.user.bankImageUrl);
-          validatedData.bankImageUrl = '';
-        }
-      }
-
-      // 업로드 파일이 존재하는 경우
-      if (req.files.length) {
-        validatedData.bankImageUrl = `${process.env.S3_STATIC_DOMAIN}/${req.files[0].key}`;
-      }
-
       await UserService.update(req.params.adptnId, validatedData);
+
       const adpartner = await UserService.findById(req.params.adptnId);
       res.status(200).json({
         code: 2000,
@@ -121,7 +102,6 @@ export default {
         message: 'User deleted successfully',
       });
     } catch (error) {
-      DEBUG(error);
       throw new NotFoundError(error.message);
     }
   },
@@ -134,7 +114,6 @@ export default {
         data: { adpartner },
       });
     } catch (error) {
-      DEBUG(error);
       throw new NotFoundError(error.message);
     }
   },
@@ -165,7 +144,6 @@ export default {
         // data: { adpartner },
       });
     } catch (error) {
-      DEBUG(error);
       if (error instanceof NotFoundError)
         throw new NotFoundError(error.message);
       else if (error instanceof AuthenticationError)

@@ -1,16 +1,11 @@
 import passport from 'passport';
-import debug from 'debug';
+import '../services/passport/passport-local.service';
 import { ApplicationError } from '../helpers/errors.helper';
 import {
   generateAccessToken,
   generateRefreshToken,
   verifyJti,
 } from '../services/jwt/jwt.service';
-import AuthSocial from '../services/auth.service';
-import '../services/passport/passport-local.service';
-import '../services/passport/passport-google.service';
-
-const DEBUG = debug('dev');
 
 /**
  * This function returns a json with user data,
@@ -22,20 +17,42 @@ const DEBUG = debug('dev');
  * @param req
  * @param res
  */
-const createCookieFromToken = async (user, statusCode, req, res) => {
+// const createCookieFromToken = async (user, statusCode, req, res) => {
+//   const accessToken = await generateAccessToken(
+//     user.no,
+//     user.userid,
+//     user.level,
+//   );
+//   const refreshToken = await generateRefreshToken(user.no, user.userid);
+
+//   res.status(statusCode).json({
+//     code: 2000,
+//     accessToken,
+//     refreshToken,
+//     data: {
+//       nickname: user.nickname,
+//     },
+//   });
+// };
+
+const createToken = async (user, statusCode, req, res) => {
   const accessToken = await generateAccessToken(
     user.no,
-    user.userid,
-    user.level,
+    user.name,
+    user.isAddAdmin,
   );
-  const refreshToken = await generateRefreshToken(user.no, user.userid);
+  const refreshToken = await generateRefreshToken(
+    user.no,
+    user.name,
+    user.isAddAdmin,
+  );
 
   res.status(statusCode).json({
     code: 2000,
     accessToken,
     refreshToken,
     data: {
-      nickname: user.nickname,
+      admin: user,
     },
   });
 };
@@ -63,9 +80,8 @@ export default {
               },
             });
           }
-          createCookieFromToken(user, 201, req, res);
+          createToken(user, 201, req, res);
         } catch (error) {
-          DEBUG(error);
           throw new ApplicationError(500, error);
         }
       },
@@ -90,11 +106,9 @@ export default {
               msg: info.message ?? message,
             });
           }
-          // generate a signed json web token with the contents of user
-          // object and return it in the response
-          await createCookieFromToken(user, 200, req, res);
+
+          await createToken(user, 200, req, res);
         } catch (error) {
-          DEBUG(error);
           throw new ApplicationError(500, error);
         }
       },
@@ -115,7 +129,6 @@ export default {
         message: 'You have successfully logged out',
       });
     } catch (error) {
-      DEBUG(error);
       throw new ApplicationError(500, error);
     }
   },
@@ -142,9 +155,8 @@ export default {
         });
       }
 
-      await createCookieFromToken(req.user, 200, req, res);
+      await createToken(req.user, 200, req, res);
     } catch (error) {
-      DEBUG(error);
       throw new ApplicationError(500, error);
     }
   },
@@ -152,84 +164,6 @@ export default {
     try {
       return res.status(200).json({ code: 2000, msg: '유효한 토큰' });
     } catch (error) {
-      DEBUG(error);
-      throw new ApplicationError(500, error);
-    }
-  },
-  /**
-   * Protected router test
-   * @param req
-   * @param res
-   * @return {Promise<void>}
-   */
-  protectedRoute: async (req, res) => {
-    res.status(200).json({
-      status: 'success',
-      data: {
-        message: 'Yes you are. You are a Thor-n times developer',
-      },
-    });
-  },
-  googleAuthenticate: (req, res, next) => {
-    try {
-      passport.authenticate('google', {
-        scope: ['profile', 'email'],
-      })(req, res, next);
-    } catch (error) {
-      console.error(error);
-      throw new AuthenticationError(error);
-    }
-  },
-  appleAuthenticate: (req, res, next) => {
-    try {
-      passport.authenticate('apple')(req, res, next);
-    } catch (error) {
-      console.error(error);
-      throw new AuthenticationError(error);
-    }
-  },
-  loginSocialGoogle: (req, res, next) => {
-    try {
-      passport.authenticate(
-        'google',
-        { failureRedirect: '/' },
-        async (err, data) => {
-          const socialUser = await AuthSocial.findSocial(data);
-
-          if (socialUser)
-            await createCookieFromToken(socialUser, 201, req, res);
-          else {
-            return res.status(404).json({
-              code: 4040,
-              msg: '유저를 찾을수 없습니다..',
-            });
-          }
-        },
-      )(req, res, next);
-    } catch (error) {
-      console.error(error);
-      throw new ApplicationError(500, error);
-    }
-  },
-  loginSocialApple: (req, res, next) => {
-    try {
-      passport.authenticate('apple', async (err, data) => {
-        data = {
-          channel: data.channel,
-          socialId: data.sub,
-        };
-        const socialUser = await AuthSocial.findSocial(data);
-
-        if (socialUser) await createCookieFromToken(socialUser, 201, req, res);
-        else {
-          return res.status(404).json({
-            code: 4040,
-            msg: '유저를 찾을수 없습니다..',
-          });
-        }
-      })(req, res, next);
-    } catch (error) {
-      console.error(error);
       throw new ApplicationError(500, error);
     }
   },

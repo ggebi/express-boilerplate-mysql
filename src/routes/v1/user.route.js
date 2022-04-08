@@ -3,8 +3,8 @@ import userController from '../../controllers/user.controller';
 import authentication from '../../middlewares/authenticate.middleware';
 import catchAsync from '../../middlewares/catchAsync.middleware';
 import { verifyRights } from '../../middlewares/verifyRights.middleware';
-import { uploadBankAccountImage } from '../../middlewares/upload.middleware';
 
+const { authenticate } = authentication;
 const {
   findAllUsers,
   findUserById,
@@ -13,7 +13,7 @@ const {
   deleteUser,
   findMe,
 } = userController;
-const { authenticate } = authentication;
+
 const router = express.Router();
 
 router.get(
@@ -33,7 +33,6 @@ router.patch(
   '/:userId',
   authenticate,
   verifyRights('selfManageUser', 'manageUsers'),
-  uploadBankAccountImage.array('bankImageFile', 1),
   catchAsync(updateUser),
 );
 router.delete(
