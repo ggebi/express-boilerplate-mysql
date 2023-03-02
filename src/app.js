@@ -8,60 +8,47 @@ import morgan from 'morgan';
 import passport from 'passport';
 import xss from 'xss-clean';
 
-/**
- * Custom error handling
- */
+// Custom error handling
 import errorHandler from './middlewares/errorHandler.middleware';
 import { NotFoundError } from './helpers/errors.helper';
 
 // Import database configuration
 // import db from './models';
 
-/**
- * Routes import
- * @type {Router | {readonly default?: Router}}
- */
+// Routes import
 import v1Routes from './routes/v1/index.route';
 
-/**
- * Global env variables definition
- */
+// Global env variables definition
 if (process.env.NODE_ENV === 'development') {
   dotenv.config();
 }
 
-/**
- * DB & Redis
- */
+// DB
 // db.sequelize.sync();
 
-/**
- * Define Express
- * @type {*|Express}
- */
 const app = express();
 
 app.set('trust proxy', true);
 
-/**
- * Middleware definition
- */
-app.use(
-  morgan(
-    `:remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]  :response-time ms ":referrer" ":user-agent"`,
-    {
-      skip(req) {
-        if (req.method === 'OPTIONS') {
-          return true;
-        }
-        if (req.originalUrl === '/healthcheck') {
-          return true;
-        }
-        return false;
-      },
-    },
-  ),
-);
+// Middleware definition
+
+// app.use(
+//   morgan(
+//     `:remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]  :response-time ms ":referrer" ":user-agent"`,
+//     {
+//       skip(req) {
+//         if (req.method === 'OPTIONS') {
+//           return true;
+//         }
+//         if (req.originalUrl === '/healthcheck') {
+//           return true;
+//         }
+//         return false;
+//       },
+//     },
+//   ),
+// );
+app.use(morgan("combined"));
 
 /**
  * Set security HTTP Headers
@@ -72,34 +59,14 @@ app.use(
   }),
 );
 
-/**
- * Parse json request body
- */
-app.use(express.json());
 
-/**
- * Parse urlencoded request body
- */
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // Parse json request body
+app.use(express.urlencoded({ extended: true })); // Parse urlencoded request body
+app.use(xss()); // Sanitize data
+app.use(compression()); // GZIP compression
+app.use(cookieParser()); // Parsing cookie
 
-/**
- * Sanitize data
- */
-app.use(xss());
-
-/**
- * GZIP compression
- */
-app.use(compression());
-
-/**
- * Parsing cookie
- */
-app.use(cookieParser());
-
-/**
- * CORS policy configuration
- */
+// CORS policy configuration
 app.use(
   cors({
     origin: true,
@@ -107,28 +74,16 @@ app.use(
   }),
 );
 
-/**
- * ALB healthcheck
- */
-app.get('/healthcheck', function (req, res) {
-  return res.status(200).send('ok');
-});
+// ALB healthcheck
+// app.get('/healthcheck', function (req, res) {
+//   return res.status(200).send('ok');
+// });
 
-/**
- * Initialize Passport and pass the session to session storage of express
- */
-app.use(passport.initialize());
+app.use(passport.initialize()); // Initialize Passport and pass the session to session storage of express
 
-/**
- * Routes definitions
- */
+// Routes definitions
 app.use('/admin/v1/', v1Routes);
 
-/**
- * This helper function is useful if we use express as a pure API endpoint
- * Everytime you hit a route that doesn't exist it returns a json error 404
- */
-// eslint-disable-next-line no-unused-vars
 app.all('*', (_, res) => {
   throw new NotFoundError('Resource not found on this server!!');
 });
